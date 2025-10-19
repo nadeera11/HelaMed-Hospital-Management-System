@@ -83,12 +83,14 @@ export function Dashboard() {
         if (appointmentsResponse.ok) {
           const appointmentsData = await appointmentsResponse.json();
           console.log('Appointments data received:', appointmentsData);
+          console.log('First appointment details:', JSON.stringify(appointmentsData.data?.[0], null, 2));
           
           const appointmentCount = appointmentsData.data?.length || appointmentsData.results || 0;
           console.log('Appointment count:', appointmentCount);
           
           newDashboardData.appointmentsToday = appointmentCount;
           newDashboardData.todaysSchedule = (appointmentsData.data || []).slice(0, 3);
+          console.log('Today schedule set to:', newDashboardData.todaysSchedule);
         }
       } catch (error) {
         console.error('Error fetching appointments:', error);
@@ -436,29 +438,29 @@ export function Dashboard() {
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <p className="font-semibold text-slate-800">
-                          {appointment.patient ? 
-                            `${appointment.patient.firstName} ${appointment.patient.lastName}` : 
-                            appointment.name
-                          }
+                          {appointment.patient?.firstName && appointment.patient?.lastName
+                            ? `${appointment.patient.firstName} ${appointment.patient.lastName}`
+                            : appointment.patient?.name || appointment.patientName || appointment.name || 'Patient Name Not Available'}
                         </p>
-                        <p className="text-sm text-slate-500">{appointment.type || appointment.reason}</p>
+                        <p className="text-sm text-slate-500">{appointment.type || appointment.reason || appointment.appointmentType || 'Consultation'}</p>
                         <p className="text-xs text-slate-400 mt-1">
-                          {appointment.doctor ? 
-                            `${appointment.doctor.firstName} ${appointment.doctor.lastName}` : 
-                            appointment.doctor
-                          }
+                          {appointment.doctor?.firstName && appointment.doctor?.lastName
+                            ? `Dr. ${appointment.doctor.firstName} ${appointment.doctor.lastName}`
+                            : appointment.doctor?.name || appointment.doctorName || 'Doctor Not Assigned'}
                         </p>
                       </div>
                       <div className="text-right">
                         <p className="text-blue-600 font-bold text-sm">
-                          {appointment.appointmentTime || appointment.time}
+                          {appointment.appointmentTime || appointment.time || 'Time TBD'}
                         </p>
                         <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium mt-1 ${
-                          appointment.status === 'confirmed' 
+                          appointment.status === 'confirmed' || appointment.status === 'scheduled'
                             ? 'bg-green-100 text-green-700' 
-                            : 'bg-yellow-100 text-yellow-700'
+                            : appointment.status === 'pending'
+                            ? 'bg-yellow-100 text-yellow-700'
+                            : 'bg-blue-100 text-blue-700'
                         }`}>
-                          {appointment.status}
+                          {appointment.status || 'scheduled'}
                         </span>
                       </div>
                     </div>
