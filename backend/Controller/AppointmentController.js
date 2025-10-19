@@ -8,7 +8,7 @@ const AppError = require('../utils/appError');
 // Get all appointments
 exports.getAllAppointments = catchAsync(async (req, res, next) => {
   const appointments = await Appointment.find()
-    .populate('patient', 'firstName lastName email phone')
+    .populate('patient', 'name email phone mobileNumber')
     .populate('doctor', 'firstName lastName email specialization')
     .sort({ appointmentDate: 1 });
   
@@ -22,7 +22,7 @@ exports.getAllAppointments = catchAsync(async (req, res, next) => {
 // Get appointment by ID
 exports.getAppointmentById = catchAsync(async (req, res, next) => {
   const appointment = await Appointment.findById(req.params.id)
-    .populate('patient', 'firstName lastName email phone')
+    .populate('patient', 'name email phone mobileNumber')
     .populate('doctor', 'firstName lastName email specialization');
   
   if (!appointment) {
@@ -40,7 +40,7 @@ exports.getAppointmentsByUser = catchAsync(async (req, res, next) => {
   const { userId } = req.params;
   
   const appointments = await Appointment.find({ patient: userId })
-    .populate('patient', 'firstName lastName email phone')
+    .populate('patient', 'name email phone mobileNumber')
     .populate('doctor', 'firstName lastName email specialization')
     .sort({ appointmentDate: -1 });
   
@@ -56,7 +56,7 @@ exports.getAppointmentsByDoctor = catchAsync(async (req, res, next) => {
   const { doctorId } = req.params;
   
   const appointments = await Appointment.find({ doctor: doctorId })
-    .populate('patient', 'firstName lastName email phone')
+    .populate('patient', 'name email phone mobileNumber')
     .populate('doctor', 'firstName lastName email specialization')
     .sort({ appointmentDate: 1 });
   
@@ -238,7 +238,7 @@ exports.getTodayAppointments = catchAsync(async (req, res, next) => {
   })
   .populate({
     path: 'patient',
-    select: 'firstName lastName email phone',
+    select: 'name email phone mobileNumber',
     strictPopulate: false
   })
   .populate({
@@ -253,6 +253,9 @@ exports.getTodayAppointments = catchAsync(async (req, res, next) => {
   console.log('Today\'s appointments found:', appointments.length);
   if (appointments.length > 0) {
     console.log('Sample appointment:', JSON.stringify(appointments[0], null, 2));
+    console.log('Patient object:', appointments[0].patient);
+    console.log('Patient name:', appointments[0].patient?.name);
+    console.log('Patient email:', appointments[0].patient?.email);
   }
   console.log('=== End Debug ===');
   
@@ -271,7 +274,7 @@ exports.getUpcomingAppointments = catchAsync(async (req, res, next) => {
     appointmentDate: { $gte: now },
     status: { $nin: ['cancelled', 'completed'] }
   })
-  .populate('patient', 'firstName lastName email phone')
+  .populate('patient', 'name email phone mobileNumber')
   .populate('doctor', 'firstName lastName email specialization')
   .sort({ appointmentDate: 1, appointmentTime: 1 });
   
