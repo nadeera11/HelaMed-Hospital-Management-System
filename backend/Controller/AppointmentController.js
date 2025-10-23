@@ -60,6 +60,13 @@ exports.getAppointmentsByDoctor = catchAsync(async (req, res, next) => {
     .populate('doctor', 'firstName lastName email specialization')
     .sort({ appointmentDate: 1 });
   
+  // Log appointments with missing patient data for debugging
+  appointments.forEach((apt, index) => {
+    if (!apt.patient) {
+      console.log(`⚠️ Appointment ${index} (ID: ${apt._id}) has no patient data. Patient ID: ${apt.patient}`);
+    }
+  });
+  
   res.status(200).json({
     status: 'success',
     results: appointments.length,
