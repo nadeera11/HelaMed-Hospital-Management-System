@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Calendar,
   Clock,
@@ -41,7 +41,7 @@ const MyAppointments = () => {
   const doctorId = getCurrentDoctorId();
 
   // Fetch appointments for the current doctor
-  const fetchAppointments = async () => {
+  const fetchAppointments = useCallback(async () => {
     if (!doctorId) {
       console.error('No doctor ID found');
       setLoading(false);
@@ -67,11 +67,11 @@ const MyAppointments = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [doctorId]);
 
   useEffect(() => {
     fetchAppointments();
-  }, []);
+  }, [fetchAppointments]);
 
   // Filter appointments based on status
   useEffect(() => {
@@ -225,14 +225,11 @@ const MyAppointments = () => {
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900">
-                            {appointment.patient ? 
-                              `${appointment.patient.firstName} ${appointment.patient.lastName}` : 
-                              'Patient Name Unavailable'
-                            }
+                            {appointment.patient?.name || 'Patient Name Unavailable'}
                           </div>
                           <div className="text-sm text-gray-500 flex items-center">
                             <Phone size={12} className="mr-1" />
-                            {appointment.patient?.phone || 'N/A'}
+                            {appointment.patient?.mobileNumber || appointment.patient?.phone || 'N/A'}
                           </div>
                         </div>
                       </div>
@@ -323,15 +320,12 @@ const MyAppointments = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Patient</label>
                   <p className="text-sm text-gray-900">
-                    {selectedAppointment.patient ? 
-                      `${selectedAppointment.patient.firstName} ${selectedAppointment.patient.lastName}` : 
-                      'Patient Name Unavailable'
-                    }
+                    {selectedAppointment.patient?.name || 'Patient Name Unavailable'}
                   </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Contact</label>
-                  <p className="text-sm text-gray-900">{selectedAppointment.patient?.phone || 'N/A'}</p>
+                  <p className="text-sm text-gray-900">{selectedAppointment.patient?.mobileNumber || selectedAppointment.patient?.phone || 'N/A'}</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
