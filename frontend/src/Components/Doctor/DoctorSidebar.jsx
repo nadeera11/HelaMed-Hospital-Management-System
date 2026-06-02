@@ -61,6 +61,10 @@ export function DoctorSidebar({ currentPage, setCurrentPage, userRole }) {
       icon: <UserCogIcon size={20} />,
       subMenu: [
         {
+          id: 'doctorProfile',
+          label: 'My Profile',
+        },
+        {
           id: 'scheduling',
           label: 'My Roster',
         },

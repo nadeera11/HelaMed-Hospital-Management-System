@@ -64,25 +64,6 @@ const userSchema = new Schema({
     }
 });
 
-// Hash password before saving
-userSchema.pre('save', async function(next) {
-    // Only hash the password if it has been modified (or is new)
-    if (!this.isModified('password')) {
-        this.updatedAt = Date.now();
-        return next();
-    }
-
-    try {
-        // Hash password with cost of 12
-        const hashedPassword = await bcrypt.hash(this.password, 12);
-        this.password = hashedPassword;
-        this.updatedAt = Date.now();
-        next();
-    } catch (error) {
-        next(error);
-    }
-});
-
 // Hash password before saving if modified
 userSchema.pre('save', async function(next) {
     if (!this.isModified('password')) return next();

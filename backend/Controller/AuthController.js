@@ -3,6 +3,7 @@ const User = require('../Model/UserModel');
 const Staff = require('../Model/StaffModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 
 const register = async (req, res) => {
   try {
@@ -40,15 +41,11 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'User already exists with this mobile number' });
     }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
     // Prepare user data
     const userData = {
       name,
       email,
-      password: hashedPassword,
+      password,
       gender: gender || 'male', // Default gender if not provided
       mobileNumber,
       role: 'patient' // Default role
@@ -147,6 +144,12 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        message: 'Database is not connected. Please try again in a moment.'
+      });
+    }
+
     // Debug logging
     console.log('Login attempt for email:', email);
 
@@ -158,6 +161,7 @@ const login = async (req, res) => {
     // First, check if user is a staff member
     let user = await Staff.findOne({ email }).select('+password');
     let isStaff = false;
+    let isMatch = false;
     
     if (user) {
       isStaff = true;
@@ -167,7 +171,7 @@ const login = async (req, res) => {
       }
 
       // Check password for staff
-      const isMatch = await user.correctPassword(password, user.password);
+      isMatch = await user.correctPassword(password, user.password);
       if (!isMatch) {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
@@ -185,7 +189,7 @@ const login = async (req, res) => {
       }
 
       // Check password for user (handle legacy plaintext passwords)
-      let isMatch = false;
+      isMatch = false;
       try {
         // Try bcrypt compare first
         isMatch = await bcrypt.compare(password, user.password);
@@ -213,11 +217,30 @@ const login = async (req, res) => {
       }
     }
 
-    // Check password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
+    const mapStaffRole = (role) => {
+      switch (role) {
+        case 'doctor':
+        case 'physician':
+          return 'doctor';
+        case 'pharmacist':
+          return 'pharmacist';
+        case 'lab-technician':
+        case 'technician':
+          return 'lab_technician';
+        case 'nurse':
+          return 'staff';
+        case 'administrator':
+        case 'department-head':
+          return 'admin';
+        default:
+          return 'staff';
+      }
+    };
+
+    const mappedRole = isStaff ? mapStaffRole(user.role) : user.role;
+    const displayName = isStaff
+      ? (user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim())
+      : user.name;
 
     // Verify JWT_SECRET exists or use fallback
     const jwtSecret = process.env.JWT_SECRET || 'fallback_secret_key';
@@ -226,28 +249,45 @@ const login = async (req, res) => {
     const token = jwt.sign(
       { 
         id: user._id, 
-        role: user.role,
-        name: user.name,
+        role: mappedRole,
+        name: displayName,
         email: user.email
       },
       jwtSecret,
       { expiresIn: '24h' }
     );
 
+    const responseUser = isStaff ? {
+      id: user._id,
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      name: displayName,
+      email: user.email,
+      role: mappedRole,
+      department: user.department,
+      specialization: user.specialization,
+      employeeId: user.employeeId,
+      phone: user.phone,
+      status: user.status
+    } : {
+      id: user._id,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      age: user.age,
+      dob: user.dob,
+      gender: user.gender,
+      mobileNumber: user.mobileNumber,
+      address: user.address,
+      role: user.role
+    };
+
     // Success response
     res.json({
       message: 'Login successful',
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        age: user.age,
-        dob: user.dob,
-        gender: user.gender,
-        mobileNumber: user.mobileNumber,
-        role: user.role
-      }
+      user: responseUser
     });
   } catch (error) {
     console.error('Login error:', error);

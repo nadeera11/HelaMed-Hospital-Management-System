@@ -5,3 +5,4 @@ export { default as DoctorSidebar } from './DoctorSidebar';
 export { default as DoctorHeader } from './DoctorHeader';
 export { default as MyPatients } from './MyPatients';
 export { default as MyAppointments } from './MyAppointments';
+export { default as DoctorProfile } from './DoctorProfile';

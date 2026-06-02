@@ -4,7 +4,7 @@
 
 html, body, #root {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
   overflow-x: hidden; /* Prevent horizontal scrolling */
@@ -291,4 +291,116 @@ body.doctor-layout {
 
 .hover-shimmer:hover {
   animation: shimmer 2s linear infinite;
+}
+
+/* Glassmorphism and Modern UI Helpers */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-panel-heavy {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.dark .glass-panel-heavy {
+  background: rgba(11, 15, 25, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Smooth theme transition */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition: background-color 0.3s ease, border-color 0.3s ease, text-decoration-color 0.3s ease, fill 0.3s ease, stroke 0.3s ease, box-shadow 0.3s ease !important;
+  transition-delay: 0s !important;
+}
+
+/* Custom Scrollbar for dark mode */
+.dark ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Card Neon Glows */
+.glow-blue {
+  box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.15), 0 1px 3px 0 rgba(59, 130, 246, 0.1);
+}
+.glow-blue:hover {
+  box-shadow: 0 20px 40px -15px rgba(59, 130, 246, 0.35), 0 0 15px 2px rgba(59, 130, 246, 0.15);
+}
+
+.glow-green {
+  box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.15), 0 1px 3px 0 rgba(16, 185, 129, 0.1);
+}
+.glow-green:hover {
+  box-shadow: 0 20px 40px -15px rgba(16, 185, 129, 0.35), 0 0 15px 2px rgba(16, 185, 129, 0.15);
+}
+
+.glow-yellow {
+  box-shadow: 0 10px 30px -10px rgba(245, 158, 11, 0.15), 0 1px 3px 0 rgba(245, 158, 11, 0.1);
+}
+.glow-yellow:hover {
+  box-shadow: 0 20px 40px -15px rgba(245, 158, 11, 0.35), 0 0 15px 2px rgba(245, 158, 11, 0.15);
+}
+
+/* Details Drawer Animation */
+.drawer-transition {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+/* Base elements setting for modern font */
+body {
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* Custom pulsing dot indicator */
+.pulse-indicator {
+  position: relative;
+}
+.pulse-indicator::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse-ring 1.5s cubic-bezier(0.215, 0.610, 0.355, 1) infinite;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  80%, 100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
 }

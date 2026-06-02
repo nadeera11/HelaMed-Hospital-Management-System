@@ -44,7 +44,17 @@ const PatientList = () => {
       console.log('Fetched patients:', data);
 
       // The API returns { Users: [...] }
-      setPatients(data.Users || []);
+      const users = data.Users || [];
+      const sorted = [...users].sort((a, b) => {
+        const aTime = a?.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const bTime = b?.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (aTime !== bTime) return bTime - aTime;
+
+        const aIdTime = a?._id ? parseInt(a._id.substring(0, 8), 16) : 0;
+        const bIdTime = b?._id ? parseInt(b._id.substring(0, 8), 16) : 0;
+        return bIdTime - aIdTime;
+      });
+      setPatients(sorted);
     } catch (err) {
       console.error('Error fetching patients:', err);
       setError(err.message);

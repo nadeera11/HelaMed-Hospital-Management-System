@@ -280,11 +280,11 @@ export function StaffDirectory({ onSelectStaff, onAddStaff }) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Staff Directory</h1>
+      <div className="flex justify-between items-center mb-2">
+        <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Staff Directory</h1>
         <button 
           onClick={onAddStaff}
-          className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
+          className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-medium rounded-xl shadow-[0_4px_14px_0_rgba(225,29,72,0.39)] hover:shadow-[0_6px_20px_rgba(225,29,72,0.23)] hover:from-rose-600 hover:to-rose-700 hover:-translate-y-0.5 transition-all duration-200"
         >
           <UserPlusIcon size={18} className="mr-2" />
           Add New Staff
@@ -293,91 +293,87 @@ export function StaffDirectory({ onSelectStaff, onAddStaff }) {
       
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-lg p-6 border border-blue-200 hover:shadow-xl transition-shadow duration-300">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-blue-600 font-medium mb-2">Total Staff</p>
-              <p className="text-3xl font-bold text-blue-900">{statusCounts.total}</p>
-            </div>
-            <div className="bg-blue-500 p-3 rounded-lg">
-              <UserIcon className="text-white" size={24} />
-            </div>
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex items-center justify-between hover:shadow-md hover:border-slate-200 transition-all group">
+          <div>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1">Total Staff</p>
+            <p className="text-3xl font-black text-slate-800 group-hover:text-blue-600 transition-colors">{statusCounts.total}</p>
+          </div>
+          <div className="bg-blue-50 text-blue-600 p-3.5 rounded-2xl group-hover:scale-110 transition-transform">
+            <UserIcon size={24} strokeWidth={2.5} />
           </div>
         </div>
-        <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-lg p-6 border border-green-200 hover:shadow-xl transition-shadow duration-300">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-green-600 font-medium mb-2">Active</p>
-              <p className="text-3xl font-bold text-green-900">{statusCounts.active}</p>
-            </div>
-            <div className="bg-green-500 p-3 rounded-lg">
-              <UserIcon className="text-white" size={24} />
-            </div>
+        
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex items-center justify-between hover:shadow-md hover:border-slate-200 transition-all group">
+          <div>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1">Active</p>
+            <p className="text-3xl font-black text-slate-800 group-hover:text-emerald-600 transition-colors">{statusCounts.active}</p>
+          </div>
+          <div className="bg-emerald-50 text-emerald-600 p-3.5 rounded-2xl group-hover:scale-110 transition-transform">
+            <UserIcon size={24} strokeWidth={2.5} />
           </div>
         </div>
-        <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl shadow-lg p-6 border border-amber-200 hover:shadow-xl transition-shadow duration-300">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-amber-600 font-medium mb-2">On Leave</p>
-              <p className="text-3xl font-bold text-amber-900">{statusCounts.onLeave}</p>
-            </div>
-            <div className="bg-amber-500 p-3 rounded-lg">
-              <CalendarIcon className="text-white" size={24} />
-            </div>
+
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex items-center justify-between hover:shadow-md hover:border-slate-200 transition-all group">
+          <div>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1">On Leave</p>
+            <p className="text-3xl font-black text-slate-800 group-hover:text-amber-600 transition-colors">{statusCounts.onLeave}</p>
+          </div>
+          <div className="bg-amber-50 text-amber-600 p-3.5 rounded-2xl group-hover:scale-110 transition-transform">
+            <CalendarIcon size={24} strokeWidth={2.5} />
           </div>
         </div>
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow duration-300">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 font-medium mb-2">Inactive</p>
-              <p className="text-3xl font-bold text-gray-900">{statusCounts.inactive}</p>
-            </div>
-            <div className="bg-gray-500 p-3 rounded-lg">
-              <UserIcon className="text-white" size={24} />
-            </div>
+
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex items-center justify-between hover:shadow-md hover:border-slate-200 transition-all group">
+          <div>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1">Inactive</p>
+            <p className="text-3xl font-black text-slate-800 group-hover:text-rose-600 transition-colors">{statusCounts.inactive}</p>
+          </div>
+          <div className="bg-rose-50 text-rose-600 p-3.5 rounded-2xl group-hover:scale-110 transition-transform">
+            <UserIcon size={24} strokeWidth={2.5} />
           </div>
         </div>
       </div>
       
       {/* Staff List */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="p-4 border-b border-gray-200 flex flex-wrap justify-between items-center gap-4">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div className="p-5 border-b border-slate-100 flex flex-wrap justify-between items-center gap-4 bg-slate-50/50">
           {/* Search Input */}
-          <div className="relative w-full md:w-64">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <SearchIcon size={16} className="text-gray-400" />
+          <div className="relative w-full md:w-72">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+              <SearchIcon size={16} className="text-slate-400" />
             </div>
             <input
               type="text"
-              placeholder="Search staff..."
+              placeholder="Search staff by name, role, email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="block w-full pl-10 pr-4 py-2.5 text-sm border border-slate-200 rounded-xl leading-5 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-slate-700"
             />
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             {/* Filter Button */}
             <div className="relative">
               <button
                 onClick={() => setFilterOpen(!filterOpen)}
-                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center px-4 py-2.5 border border-slate-200 text-sm font-medium rounded-xl text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
               >
-                <FilterIcon size={16} className="mr-2" />
-                Department: {departmentFilter === 'all' ? 'All' : departmentFilter}
-                <ChevronDownIcon size={16} className="ml-2" />
+                <FilterIcon size={16} className="mr-2 text-slate-500" />
+                <span className="mr-1 text-slate-500">Department:</span> 
+                <span className="font-semibold text-slate-800">{departmentFilter === 'all' ? 'All' : departmentFilter}</span>
+                <ChevronDownIcon size={16} className="ml-2 text-slate-400" />
               </button>
               
               {filterOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-                  <div className="py-1">
+                <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-xl shadow-xl bg-white border border-slate-100 ring-1 ring-black ring-opacity-5 z-20 overflow-hidden">
+                  <div className="py-1 max-h-60 overflow-y-auto">
                     <button
                       onClick={() => {
                         setDepartmentFilter('all');
                         setFilterOpen(false);
                       }}
-                      className={`block px-4 py-2 text-sm text-left w-full hover:bg-gray-100 ${
-                        departmentFilter === 'all' ? 'bg-gray-100 text-blue-600 font-medium' : 'text-gray-700'
+                      className={`block px-4 py-2.5 text-sm w-full text-left transition-colors ${
+                        departmentFilter === 'all' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-700 hover:bg-slate-50 font-medium'
                       }`}
                     >
                       All Departments
@@ -389,8 +385,8 @@ export function StaffDirectory({ onSelectStaff, onAddStaff }) {
                           setDepartmentFilter(dept);
                           setFilterOpen(false);
                         }}
-                        className={`block px-4 py-2 text-sm text-left w-full hover:bg-gray-100 ${
-                          departmentFilter === dept ? 'bg-gray-100 text-blue-600 font-medium' : 'text-gray-700'
+                        className={`block px-4 py-2.5 text-sm w-full text-left transition-colors ${
+                          departmentFilter === dept ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-700 hover:bg-slate-50 font-medium'
                         }`}
                       >
                         {dept}
@@ -404,28 +400,31 @@ export function StaffDirectory({ onSelectStaff, onAddStaff }) {
             {/* Refresh Button */}
             <button 
               onClick={handleRefresh}
-              className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="inline-flex items-center px-4 py-2.5 border border-slate-200 text-sm font-medium rounded-xl text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
               disabled={loading}
+              title="Refresh Data"
             >
-              <RefreshCwIcon size={16} className={`mr-1 ${loading ? 'animate-spin' : ''}`} />
-              Refresh
+              <RefreshCwIcon size={16} className={`text-slate-500 ${loading ? 'animate-spin text-blue-500' : ''}`} />
             </button>
           </div>
         </div>
 
         {loading ? (
-          <div className="p-8 flex justify-center">
+          <div className="p-12 flex justify-center bg-white">
             <div className="flex flex-col items-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-              <p className="mt-3 text-gray-500">Loading staff members...</p>
+              <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-600"></div>
+              <p className="mt-4 text-sm font-medium text-slate-500">Loading staff directory...</p>
             </div>
           </div>
         ) : error ? (
-          <div className="p-8 text-center">
-            <p className="text-red-500">{error}</p>
+          <div className="p-12 text-center bg-white">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-100 text-red-500 mb-4">
+              <XIcon size={24} />
+            </div>
+            <p className="text-slate-800 font-medium">{error}</p>
             <button
               onClick={handleRefresh}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              className="mt-4 px-5 py-2.5 bg-slate-800 text-white rounded-xl shadow-sm text-sm font-medium hover:bg-slate-700 transition-colors"
             >
               Try Again
             </button>
@@ -433,106 +432,112 @@ export function StaffDirectory({ onSelectStaff, onAddStaff }) {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <table className="min-w-full divide-y divide-slate-100">
+                <thead>
+                  <tr className="bg-white">
+                    <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">
                       Staff ID
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Name
+                    <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">
+                      Name & Contact
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Role
+                    <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">
+                      Role & Dept
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Department
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">
                       Status
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Contact
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white divide-y divide-slate-100">
                   {filteredStaff.length > 0 ? (
                     filteredStaff.map((staff) => (
-                      <tr key={staff._id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
-                          {staff._id}
+                      <tr key={staff._id} className="hover:bg-slate-50/80 transition-colors group cursor-default">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="inline-flex items-center px-2.5 py-1 text-xs font-bold text-slate-600 bg-slate-100 rounded-md tracking-wider">
+                            #{staff._id ? staff._id.slice(-6).toUpperCase() : 'UNKNOWN'}
+                          </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <div className="h-10 w-10 flex-shrink-0">
-                              <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center text-white">
-                                {staff.firstName.charAt(0)}{staff.lastName.charAt(0)}
+                            <div className="h-11 w-11 flex-shrink-0">
+                              <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-blue-700 font-bold border border-blue-200/50 shadow-sm shadow-blue-100/50">
+                                {staff.firstName?.charAt(0)}{staff.lastName?.charAt(0)}
                               </div>
                             </div>
                             <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">
+                              <div className="text-sm font-bold text-slate-800">
                                 {staff.firstName} {staff.lastName}
                               </div>
-                              <div className="text-sm text-gray-500">
+                              <div className="flex items-center text-xs font-medium text-slate-500 mt-1">
+                                <MailIcon size={12} className="mr-1 text-slate-400" />
                                 {staff.email}
+                              </div>
+                              <div className="flex items-center text-xs font-medium text-slate-500 mt-0.5">
+                                <PhoneIcon size={12} className="mr-1 text-slate-400" />
+                                {staff.phone || staff.phoneNumber || 'N/A'}
                               </div>
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {staff.role}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {staff.department}
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-semibold text-slate-700">
+                            {staff.role}
+                          </div>
+                          <div className="text-xs font-medium text-slate-500 mt-1 capitalize flex items-center">
+                            <MapPinIcon size={12} className="mr-1 text-slate-400" />
+                            {staff.department}
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            staff.status === 'Active' || staff.status === 'active' ? 'bg-green-100 text-green-800' :
-                            staff.status === 'On Leave' || staff.status === 'on-leave' ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-gray-100 text-gray-800'
+                          <span className={`inline-flex items-center px-3 py-1 text-xs font-bold rounded-full ${
+                            staff.status?.toLowerCase() === 'active' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' :
+                            staff.status?.toLowerCase() === 'on leave' || staff.status?.toLowerCase() === 'on-leave' ? 'bg-amber-50 text-amber-700 border border-amber-100' :
+                            'bg-slate-100 text-slate-600 border border-slate-200'
                           }`}>
+                            <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${
+                              staff.status?.toLowerCase() === 'active' ? 'bg-emerald-500' :
+                              staff.status?.toLowerCase() === 'on leave' || staff.status?.toLowerCase() === 'on-leave' ? 'bg-amber-500' :
+                              'bg-slate-400'
+                            }`}></span>
                             {staff.status === 'active' ? 'Active' : 
                              staff.status === 'on-leave' ? 'On Leave' : 
                              staff.status === 'inactive' ? 'Inactive' : 
                              staff.status}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {staff.phone || staff.phoneNumber || 'N/A'}
-                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <div className="flex space-x-2 justify-end">
+                          <div className="flex space-x-1 justify-end opacity-60 group-hover:opacity-100 transition-opacity">
                             <button 
                               onClick={() => handleViewStaff(staff)}
-                              className="text-blue-600 hover:text-blue-900"
+                              className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
                               title="View Details"
                             >
-                              <EyeIcon size={16} />
+                              <EyeIcon size={18} />
                             </button>
                             <button 
                               onClick={() => onSelectStaff(staff)} 
-                              className="text-blue-600 hover:text-blue-900"
+                              className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors"
                               title="Edit Staff"
                             >
-                              <PencilIcon size={16} />
+                              <PencilIcon size={18} />
                             </button>
                             <button 
                               onClick={() => handleDownloadPDF(staff)}
-                              className="text-green-600 hover:text-green-900"
+                              className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-colors"
                               title="Download PDF"
                             >
-                              <FileTextIcon size={16} />
+                              <FileTextIcon size={18} />
                             </button>
                             <button 
                               onClick={() => handleDeleteStaff(staff._id, `${staff.firstName} ${staff.lastName}`)}
-                              className="text-red-600 hover:text-red-900"
+                              className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
                               title="Delete Staff"
                             >
-                              <Trash2Icon size={16} />
+                              <Trash2Icon size={18} />
                             </button>
                           </div>
                         </td>
@@ -540,8 +545,11 @@ export function StaffDirectory({ onSelectStaff, onAddStaff }) {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
-                        No staff members found matching your search.
+                      <td colSpan="5" className="px-6 py-12 text-center">
+                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-50 mb-4 border border-slate-100">
+                          <SearchIcon size={24} className="text-slate-300" />
+                        </div>
+                        <p className="text-slate-500 font-medium">No staff members found matching your search.</p>
                       </td>
                     </tr>
                   )}

@@ -112,6 +112,7 @@ const startServer = () => {
 
 // Try to connect to MongoDB Atlas first, then fallback to local
 console.log("🔗 Attempting to connect to MongoDB Atlas...");
+mongoose.set('bufferCommands', false);
 mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 5000 })
 .then(() => {
     console.log("✅ Connected to MongoDB Atlas");
@@ -122,7 +123,7 @@ mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 5000 })
     console.log("🔄 Trying local MongoDB connection...");
     
     // Try local MongoDB
-    mongoose.connect(localMongoUri)
+    mongoose.connect(localMongoUri, { serverSelectionTimeoutMS: 5000 })
     .then(() => {
         console.log("✅ Connected to local MongoDB");
         console.log("💡 Using local database for development");

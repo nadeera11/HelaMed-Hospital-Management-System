@@ -5,6 +5,7 @@ import { DoctorDashboard } from './DoctorDashboard';
 import MyAppointments from './MyAppointments';
 import LeaveManagement from './LeaveManagement';
 import MyPatients from './MyPatients';
+import DoctorProfile from './DoctorProfile';
 
 function DoctorLayout() {
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -93,6 +94,8 @@ function DoctorLayout() {
         );
       case 'leaveManagement':
         return <LeaveManagement />;
+      case 'doctorProfile':
+        return <DoctorProfile />;
       case 'certifications':
         return (
           <div className="p-6">

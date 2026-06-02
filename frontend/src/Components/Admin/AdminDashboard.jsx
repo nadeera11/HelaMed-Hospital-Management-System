@@ -13,6 +13,8 @@ import PatientRegistrationForm from './PatientRegistrationForm';
 import { PharmacistDashboard, PharmacyItemForm } from '../Pharmacy';
 import SupplierDashboard from '../Pharmacy/SupplierDashboard';
 import PharmacyReports from '../Pharmacy/PharmacyReports';
+import UserProfile from './UserProfile';
+import AccountSettings from './AccountSettings';
 
 
 function AdminDashboard() {
@@ -20,6 +22,88 @@ function AdminDashboard() {
   const [userRole, setUserRole] = useState('admin');
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [selectedPharmacyItem, setSelectedPharmacyItem] = useState(null);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useEffect(() => {
+    // Sync theme class to documentElement
+    const root = document.documentElement;
+    root.classList.add('theme-transition');
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+    
+    // Clean up transition class after a short delay to keep general performance crisp
+    const timer = setTimeout(() => {
+      root.classList.remove('theme-transition');
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [theme]);
+
+  // Listener for Ctrl + K
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const commandItems = [
+    { category: 'Navigation', label: 'Go to Dashboard Overview', action: () => setCurrentPage('dashboard'), icon: '📊' },
+    { category: 'Navigation', label: 'View Patient Directory', action: () => setCurrentPage('patients'), icon: '👥' },
+    { category: 'Navigation', label: 'Register New Patient', action: () => setCurrentPage('patientRegistration'), icon: '➕' },
+    { category: 'Navigation', label: 'View Staff & Doctors Directory', action: () => setCurrentPage('staffProfiles'), icon: '🩺' },
+    { category: 'Navigation', label: 'Manage Shift Rosters', action: () => setCurrentPage('scheduling'), icon: '📅' },
+    { category: 'Navigation', label: 'Pharmacy & Drug Inventory', action: () => setCurrentPage('inventory'), icon: '📦' },
+    { category: 'Navigation', label: 'Leave Requests & Approvals', action: () => setCurrentPage('leaveManagement'), icon: '✉️' },
+    { category: 'Navigation', label: 'Credentials & Certifications', action: () => setCurrentPage('certifications'), icon: '📜' },
+    { category: 'Quick Action', label: 'Add New Staff Profile', action: () => handleAddStaff(), icon: '👤' },
+    { category: 'Quick Action', label: 'Add New Pharmacy Item', action: () => handleAddPharmacyItem(), icon: '💊' },
+    { category: 'Quick Action', label: 'Export Operations Report', action: () => alert('Exporting operations report... Done!'), icon: '📥' },
+    { category: 'System', label: 'Toggle Application Theme', action: () => setTheme(prev => prev === 'light' ? 'dark' : 'light'), icon: '🌓' },
+    { category: 'System', label: 'Sign Out & Lock Terminal', action: () => handleLogout(), icon: '🔒' }
+  ];
+
+  const filteredItems = commandItems.filter(item => 
+    item.label.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    item.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Command palette keyboard navigation listener
+  useEffect(() => {
+    if (!commandPaletteOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setSelectedIndex((prev) => (prev + 1) % filteredItems.length);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setSelectedIndex((prev) => (prev - 1 + filteredItems.length) % filteredItems.length);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (filteredItems[selectedIndex]) {
+          filteredItems[selectedIndex].action();
+          setCommandPaletteOpen(false);
+          setSearchQuery('');
+        }
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        setCommandPaletteOpen(false);
+        setSearchQuery('');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [commandPaletteOpen, filteredItems, selectedIndex]);
 
   useEffect(() => {
     // Get user info from localStorage
@@ -69,11 +153,17 @@ function AdminDashboard() {
         body: JSON.stringify(staffData)
       });
 
+      const contentType = response.headers.get('content-type') || '';
+      const payload = contentType.includes('application/json')
+        ? await response.json()
+        : await response.text();
+
       if (!response.ok) {
-        throw new Error('Failed to save staff member');
+        const message = payload?.message || payload?.error?.message || response.statusText || 'Failed to save staff member';
+        throw new Error(message);
       }
 
-      const result = await response.json();
+      const result = payload;
       console.log('Staff saved successfully:', result);
       
       // Navigate back to staff directory
@@ -275,6 +365,12 @@ function AdminDashboard() {
             <p className="text-gray-600">Lab reports functionality will be implemented here.</p>
           </div>
         );
+        
+      // Settings and Profile
+      case 'profileSettings':
+        return <UserProfile />;
+      case 'accountSettings':
+        return <AccountSettings />;
       
       default:
         return <Dashboard />;
@@ -294,20 +390,109 @@ function AdminDashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-cyan-50">
+    <div className="flex h-screen bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} userRole={userRole} />
-      <div className="flex-1 flex flex-col bg-transparent">
+      <div className="flex-1 flex flex-col bg-transparent overflow-hidden">
         <Header 
           currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
           selectedPatientId={selectedStaff?._id}
           onLogout={handleLogout}
+          theme={theme}
+          toggleTheme={() => setTheme(prev => prev === 'light' ? 'dark' : 'light')}
+          onOpenCommandPalette={() => {
+            setSearchQuery('');
+            setSelectedIndex(0);
+            setCommandPaletteOpen(true);
+          }}
         />
-        <main className="flex-1 overflow-y-auto bg-gradient-to-br from-white/40 via-blue-50/40 to-cyan-50/40">
-          <div className="py-6 px-8">
+        <main className="flex-1 overflow-y-auto bg-slate-50/50 dark:bg-slate-900/40">
+          <div className="py-6 px-8 max-w-7xl mx-auto w-full">
             {renderContent()}
           </div>
         </main>
       </div>
+
+      {/* Command Palette Modal */}
+      {commandPaletteOpen && (
+        <div 
+          className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-slate-950/60 backdrop-blur-sm transition-opacity duration-300"
+          onClick={() => setCommandPaletteOpen(false)}
+        >
+          <div 
+            className="w-full max-w-xl overflow-hidden glass-panel-heavy rounded-2xl shadow-2xl border border-slate-200/50 dark:border-slate-800/80 animate-scale-in"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Search Input */}
+            <div className="flex items-center px-4 border-b border-slate-200/50 dark:border-slate-800/50">
+              <span className="text-xl text-slate-400">🔍</span>
+              <input 
+                type="text" 
+                placeholder="Search actions, sections... (Use ↑↓ and Enter)"
+                className="w-full py-4 pl-3 bg-transparent text-slate-800 dark:text-slate-100 font-medium focus:outline-none placeholder-slate-400 dark:placeholder-slate-500 text-sm"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setSelectedIndex(0);
+                }}
+                autoFocus
+              />
+            </div>
+            
+            {/* Results List */}
+            <div className="max-h-72 overflow-y-auto p-2">
+              {filteredItems.length > 0 ? (
+                filteredItems.map((item, idx) => (
+                  <div 
+                    key={idx}
+                    onClick={() => {
+                      item.action();
+                      setCommandPaletteOpen(false);
+                      setSearchQuery('');
+                    }}
+                    onMouseEnter={() => setSelectedIndex(idx)}
+                    className={`flex items-center justify-between px-4 py-3 rounded-xl cursor-pointer transition-all duration-150 ${
+                      idx === selectedIndex 
+                        ? 'bg-blue-600 text-white shadow-md' 
+                        : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-850'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <span className="text-lg">{item.icon}</span>
+                      <div className="text-left">
+                        <p className="font-semibold text-sm">{item.label}</p>
+                        <p className={`text-xs ${idx === selectedIndex ? 'text-blue-100' : 'text-slate-400 dark:text-slate-500'}`}>
+                          {item.category}
+                        </p>
+                      </div>
+                    </div>
+                    {idx === selectedIndex && (
+                      <span className="text-xs font-semibold bg-white/20 px-2 py-0.5 rounded text-white animate-pulse">
+                        Enter
+                      </span>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-slate-400 dark:text-slate-500">
+                  <p className="text-sm font-medium">No results found for "{searchQuery}"</p>
+                  <p className="text-xs mt-1">Try searching for 'dashboard', 'patient', 'theme', or 'staff'</p>
+                </div>
+              )}
+            </div>
+            
+            {/* Footer */}
+            <div className="flex justify-between items-center px-4 py-2.5 bg-slate-50/50 dark:bg-slate-900/50 border-t border-slate-200/50 dark:border-slate-800/50 text-xs text-slate-400 dark:text-slate-500 font-medium">
+              <div className="flex space-x-3">
+                <span><kbd className="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded">↑↓</kbd> Navigate</span>
+                <span><kbd className="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded">↵</kbd> Select</span>
+                <span><kbd className="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded">esc</kbd> Dismiss</span>
+              </div>
+              <span>Command Palette v1.2</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

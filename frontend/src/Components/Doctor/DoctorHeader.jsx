@@ -20,6 +20,7 @@ export function DoctorHeader({ currentPage }) {
     labRequests: 'Order Tests',
     testResults: 'View Results',
     // Self Service
+    doctorProfile: 'My Profile',
     scheduling: 'My Roster',
     leaveManagement: 'Apply for Leave',
     certifications: 'My Credentials',
