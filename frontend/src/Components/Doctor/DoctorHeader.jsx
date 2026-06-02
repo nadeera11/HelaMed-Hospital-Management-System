@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   BellIcon,
   SearchIcon,
   UserIcon,
   ChevronDownIcon,
+  SettingsIcon,
+  LogOutIcon
 } from 'lucide-react';
 
-export function DoctorHeader({ currentPage }) {
+export function DoctorHeader({ currentPage, setCurrentPage, onLogout }) {
   const pageTitle = {
     dashboard: 'Dashboard',
     // Patient Management
@@ -27,6 +29,13 @@ export function DoctorHeader({ currentPage }) {
   };
 
   const userName = localStorage.getItem('user_name') || 'Dr. John Smith';
+  const userEmail = (() => {
+    const stored = localStorage.getItem('user');
+    const parsed = stored ? JSON.parse(stored) : null;
+    return parsed?.email || '';
+  })();
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   return (
     <div className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
@@ -60,7 +69,13 @@ export function DoctorHeader({ currentPage }) {
 
           {/* Notifications */}
           <div className="relative">
-            <button className="p-2 text-gray-400 hover:text-gray-500 relative">
+            <button
+              onClick={() => {
+                setNotificationsOpen(!notificationsOpen);
+                setProfileOpen(false);
+              }}
+              className="p-2 text-gray-400 hover:text-gray-500 relative"
+            >
               <BellIcon className="h-6 w-6" />
               {/* Notification badge */}
               <span className="absolute top-0 right-0 block h-3 w-3 rounded-full bg-red-400 ring-2 ring-white"></span>
@@ -69,8 +84,14 @@ export function DoctorHeader({ currentPage }) {
 
           {/* Profile Dropdown */}
           <div className="relative">
-            <button className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 
-                             bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-md transition-colors">
+            <button
+              onClick={() => {
+                setProfileOpen(!profileOpen);
+                setNotificationsOpen(false);
+              }}
+              className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 
+                             bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-md transition-colors"
+            >
               <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
                 <UserIcon className="h-5 w-5 text-blue-600" />
               </div>
@@ -79,6 +100,34 @@ export function DoctorHeader({ currentPage }) {
               </span>
               <ChevronDownIcon className="h-4 w-4" />
             </button>
+
+            {profileOpen && (
+              <div className="absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-lg border border-gray-200 z-50">
+                <div className="px-4 py-3 border-b border-gray-100">
+                  <p className="text-sm font-semibold text-gray-800">{userName}</p>
+                  {userEmail && (
+                    <p className="text-xs text-gray-500 truncate">{userEmail}</p>
+                  )}
+                </div>
+                <button
+                  onClick={() => {
+                    setCurrentPage?.('doctorProfile');
+                    setProfileOpen(false);
+                  }}
+                  className="w-full flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+                >
+                  <SettingsIcon className="h-4 w-4 mr-2 text-gray-500" />
+                  Profile Settings
+                </button>
+                <button
+                  onClick={onLogout}
+                  className="w-full flex items-center px-4 py-2.5 text-sm text-rose-600 hover:bg-rose-50"
+                >
+                  <LogOutIcon className="h-4 w-4 mr-2" />
+                  Log Out
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -88,6 +137,8 @@ export function DoctorHeader({ currentPage }) {
 
 DoctorHeader.propTypes = {
   currentPage: PropTypes.string.isRequired,
+  setCurrentPage: PropTypes.func,
+  onLogout: PropTypes.func,
 };
 
 export default DoctorHeader;

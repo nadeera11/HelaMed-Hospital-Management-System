@@ -119,6 +119,7 @@ function DoctorLayout() {
       <div className="flex-1 flex flex-col">
         <DoctorHeader 
           currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
           onLogout={handleLogout}
         />
         <main className="flex-1 overflow-y-auto">
