@@ -69,6 +69,7 @@ function PharmacistLayout() {
           onNavigateToAdd={handleNavigateToAdd}
           onNavigateToEdit={handleNavigateToEdit}
           onNavigateToInventory={handleNavigateToInventory}
+          onNavigateToPrescriptions={() => setCurrentPage('prescriptions')}
         />;
       
       // Inventory Management
@@ -78,6 +79,7 @@ function PharmacistLayout() {
           onNavigateToAdd={handleNavigateToAdd}
           onNavigateToEdit={handleNavigateToEdit}
           onNavigateToInventory={handleNavigateToInventory}
+          onNavigateToPrescriptions={() => setCurrentPage('prescriptions')}
         />;
       case 'all-items':
         return <PharmacistDashboard 
@@ -85,6 +87,7 @@ function PharmacistLayout() {
           onNavigateToAdd={handleNavigateToAdd}
           onNavigateToEdit={handleNavigateToEdit}
           onNavigateToInventory={handleNavigateToInventory}
+          onNavigateToPrescriptions={() => setCurrentPage('prescriptions')}
         />;
       case 'low-stock':
         return <PharmacistDashboard 
@@ -92,6 +95,7 @@ function PharmacistLayout() {
           onNavigateToAdd={handleNavigateToAdd}
           onNavigateToEdit={handleNavigateToEdit}
           onNavigateToInventory={handleNavigateToInventory}
+          onNavigateToPrescriptions={() => setCurrentPage('prescriptions')}
         />;
       case 'add-item':
         return <PharmacyItemForm onBack={handleBackToDashboard} />;
@@ -146,6 +150,7 @@ function PharmacistLayout() {
             onNavigateToAdd={handleNavigateToAdd}
             onNavigateToEdit={handleNavigateToEdit}
             onNavigateToInventory={handleNavigateToInventory}
+            onNavigateToPrescriptions={() => setCurrentPage('prescriptions')}
           />
         );
     }

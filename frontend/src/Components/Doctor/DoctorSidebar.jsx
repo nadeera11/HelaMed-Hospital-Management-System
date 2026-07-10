@@ -60,10 +60,10 @@ export function DoctorSidebar({ currentPage, setCurrentPage, userRole }) {
       label: 'Self Service',
       icon: <UserCogIcon size={20} />,
       subMenu: [
-        {
-          id: 'scheduling',
-          label: 'My Roster',
-        },
+        // {
+        //   id: 'scheduling',
+        //   label: 'My Roster',
+        // },
         {
           id: 'leaveManagement',
           label: 'Apply for Leave',

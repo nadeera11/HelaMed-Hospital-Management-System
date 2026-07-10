@@ -18,7 +18,8 @@ const PharmacistDashboard = ({
   activeTab: propActiveTab,
   onNavigateToAdd,
   onNavigateToEdit,
-  onNavigateToInventory
+  onNavigateToInventory,
+  onNavigateToPrescriptions
 }) => {
   const navigate = useNavigate();
   const successTimeoutRef = useRef(null);
@@ -141,10 +142,20 @@ const PharmacistDashboard = ({
         ? await loadDispenseSummary({ updateStats: false, showLoader: false })
         : null;
 
+      // Fetch pending prescriptions
+      let pendingCount = 0;
+      try {
+        const presResponse = await pharmacyService.getPrescriptionsForPharmacy();
+        const prescriptions = presResponse.data || [];
+        pendingCount = prescriptions.filter(p => p.status === 'sent-to-pharmacy').length;
+      } catch (presError) {
+        console.error('Error fetching prescriptions for dashboard:', presError);
+      }
+
       // Update stats
       setStats(prev => ({
         totalMedications: Array.isArray(itemsData) ? itemsData.length : 0,
-        pendingPrescriptions: prev.pendingPrescriptions || 0,
+        pendingPrescriptions: pendingCount,
         dispensedToday: dispenseSummary?.totalDispensedQuantity ?? prev.dispensedToday,
         dispenseEventsToday: dispenseSummary?.totalDispenseEvents ?? prev.dispenseEventsToday,
         lowStockItems: Array.isArray(lowStockData) ? lowStockData.length : prev.lowStockItems,
@@ -626,17 +637,28 @@ const PharmacistDashboard = ({
             </div>
           </div>
           
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6">
+          <button
+            type="button"
+            onClick={() => {
+              if (onNavigateToPrescriptions) {
+                onNavigateToPrescriptions();
+              } else {
+                navigate('/pharmacist/prescriptions');
+              }
+            }}
+            className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 text-left w-full hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-amber-200"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-slate-600 font-medium text-sm sm:text-base">Pending Prescriptions</p>
                 <p className="text-xl sm:text-2xl font-bold text-slate-800">{stats.pendingPrescriptions}</p>
+                <p className="text-xs text-amber-600 mt-2 hidden sm:block">Click to view prescriptions</p>
               </div>
               <div className="bg-amber-50 p-2 sm:p-3 rounded-full">
                 <AlertCircle className="h-5 w-5 sm:h-6 sm:w-6 text-amber-600" />
               </div>
             </div>
-          </div>
+          </button>
           
           <button
             type="button"

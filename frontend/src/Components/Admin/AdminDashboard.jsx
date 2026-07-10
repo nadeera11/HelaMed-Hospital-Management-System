@@ -13,6 +13,7 @@ import PatientRegistrationForm from './PatientRegistrationForm';
 import { PharmacistDashboard, PharmacyItemForm } from '../Pharmacy';
 import SupplierDashboard from '../Pharmacy/SupplierDashboard';
 import PharmacyReports from '../Pharmacy/PharmacyReports';
+import PharmacistPrescriptions from '../Pharmacy/PharmacistPrescriptions';
 import UserProfile from './UserProfile';
 import AccountSettings from './AccountSettings';
 
@@ -258,12 +259,7 @@ function AdminDashboard() {
       
       // Prescription Management
       case 'prescription':
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">Prescriptions</h2>
-            <p className="text-gray-600">Prescription management coming soon...</p>
-          </div>
-        );
+        return <PharmacistPrescriptions />;
       case 'pending-prescriptions':
         return (
           <div className="p-6">

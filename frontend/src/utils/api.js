@@ -501,6 +501,11 @@ export const pharmacyService = {
       console.error('Report generation error:', error);
       throw error;
     }
+  },
+
+  // Get prescriptions for pharmacy
+  getPrescriptionsForPharmacy: async () => {
+    return await apiRequest('/prescriptions/pharmacy');
   }
 };
 
@@ -750,3 +755,4 @@ export default {
   notificationService,
   userService
 };
+// test

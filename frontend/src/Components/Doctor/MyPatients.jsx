@@ -746,14 +746,13 @@ const MyPatients = () => {
                       <div className="mb-4">
                         <h4 className="font-medium text-gray-700 mb-2">Medications:</h4>
                         <div className="space-y-2">
-                          {prescription.medications && Array.isArray(prescription.medications) && prescription.medications.map((med, idx) => (
+                          {prescription.medicines && Array.isArray(prescription.medicines) && prescription.medicines.map((med, idx) => (
                             <div key={idx} className="bg-gray-50 p-3 rounded">
-                              <p className="font-medium text-gray-800">{med.medicineName}</p>
+                              <p className="font-medium text-gray-800">{med.name}</p>
                               <div className="grid grid-cols-2 gap-2 mt-1 text-sm text-gray-600">
                                 <p><span className="font-medium">Dosage:</span> {med.dosage}</p>
                                 <p><span className="font-medium">Frequency:</span> {med.frequency}</p>
                                 <p><span className="font-medium">Duration:</span> {med.duration}</p>
-                                <p><span className="font-medium">Quantity:</span> {med.quantity}</p>
                               </div>
                               {med.instructions && (
                                 <p className="mt-1 text-sm text-gray-600">
@@ -762,7 +761,7 @@ const MyPatients = () => {
                               )}
                             </div>
                           ))}
-                          {(!prescription.medications || prescription.medications.length === 0) && (
+                          {(!prescription.medicines || prescription.medicines.length === 0) && (
                             <p className="text-sm text-gray-500">No medications prescribed</p>
                           )}
                         </div>
